@@ -14,18 +14,18 @@ public class UserController {
     @Autowired
     private UserService userService ;
 
-    @PostMapping()
-    public User createUser(@RequestBody UserCreationRequest request){
-        return userService.createUser(request);
-    }
-
-    @GetMapping()
-    public List<User> getAllUser(){
-        return userService.getAllUsers();
-    }
-    @GetMapping("/{userId}")
-    public User getUser(@PathVariable String userId){
-        return userService.findUserById(userId);
-    }
+//    @PostMapping()
+//    public User createUser(@RequestBody UserCreationRequest request){
+//        return userService.createUser(request);
+//    }
+//
+//    @GetMapping()
+//    public List<User> getAllUser(){
+//        return userService.getAllUsers();
+//    }
+//    @GetMapping("/{userId}")
+//    public User getUser(@PathVariable String userId){
+//        return userService.findUserById(userId);
+//    }
 
 }

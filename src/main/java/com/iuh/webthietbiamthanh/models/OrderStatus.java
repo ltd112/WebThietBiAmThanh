@@ -1,23 +1,24 @@
 package com.iuh.webthietbiamthanh.models;
 
-
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Shopping_Cart_Item")
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-public class Shipping {
+@Table(name = "order_status")
+public class OrderStatus {
+
     @Id
+    @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
-    private Double price;
+
+    @Column(name = "\"description\"")
+    private String description;
+
 }

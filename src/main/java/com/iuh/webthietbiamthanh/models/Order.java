@@ -1,33 +1,57 @@
 package com.iuh.webthietbiamthanh.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Date;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
-@Table(name = "Shopping_Cart_Item")
-@AllArgsConstructor
-@NoArgsConstructor
+@Table(name = "Orders")
 @Getter
 @Setter
 public class Order {
+
     @Id
+    @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Date dateOrder;
-    private Double totalPrice;
-    private String statusOrder;
-    private String addressShipping;
+
+    @Column(nullable = false)
+    private Long total;
+
+    @Column
+    private String address;
+
+    @Column
+    private String phone;
 
     @ManyToOne
-    @JoinColumn(name = "shipping_id")
-    private Shipping shipping;
+    @JoinColumn(name = "status_id")
+    private OrderStatus status;
+
+    @OneToMany(mappedBy = "order")
+    @JsonManagedReference
+    @JsonIgnoreProperties("order")
+    private Set<OrderItem> orderItems;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "users_id")
+    private User users;
+
+
+    @Column(updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+
+
+
+
 }

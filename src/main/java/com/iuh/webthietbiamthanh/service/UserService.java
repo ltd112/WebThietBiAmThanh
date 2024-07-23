@@ -10,27 +10,20 @@ import java.util.List;
 
 @Service
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
-
-    public User createUser(UserCreationRequest request){
-        User user = new User();
-        user.setUserName(request.getUserName());
-        user.setPassword(request.getPassword());
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setEmail(request.getEmail());
-        user.setDateOfBirth(request.getDateOfBirth());
-
-        return userRepository.save(user);
-
-    }
-    public List<User> getAllUsers(){
-        return userRepository.findAll();
-
-    }
-    public User findUserById(String userId){
-        return userRepository.findById(userId).orElseThrow(()->new RuntimeException("User not found !"));
-    }
+//    @Autowired
+//    private UserRepository userRepository;
+//
+//    public User createUser(UserCreationRequest request){
+//        User user = new User();
+//        return userRepository.save(user);
+//
+//    }
+//    public List<User> getAllUsers(){
+//        return userRepository.findAll();
+//
+//    }
+//    public User findUserById(String userId){
+//        return userRepository.findById(userId).orElseThrow(()->new RuntimeException("User not found !"));
+//    }
 
 }
