@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ProductOrder {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String orderId;
     private LocalDate orderDate;
