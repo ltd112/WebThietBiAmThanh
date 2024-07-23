@@ -6,28 +6,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-
 @Entity
 @Table(name = "Shopping_Cart_Item")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Order {
+public class ShoppingCartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Date dateOrder;
-    private Double totalPrice;
-    private String statusOrder;
-    private String addressShipping;
+
+    private Integer quantity;
 
     @ManyToOne
-    @JoinColumn(name = "shipping_id")
-    private Shipping shipping;
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "shopping_cart_id")
+    private ShoppingCart shoppingCart;
 }

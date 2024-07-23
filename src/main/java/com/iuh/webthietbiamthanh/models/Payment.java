@@ -14,18 +14,17 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Order {
+public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Date dateOrder;
-    private Double totalPrice;
-    private String statusOrder;
-    private String addressShipping;
+
+    private Date datePayment;
+    private String methodPayment;
 
     @ManyToOne
-    @JoinColumn(name = "shipping_id")
-    private Shipping shipping;
+    @JoinColumn(name = "shopping_cart_id")
+    private ShoppingCart shoppingCart;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
