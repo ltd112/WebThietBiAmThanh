@@ -7,17 +7,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "category")
+@Table(name = "cart")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
+    @ManyToOne
+    private UserDtls user;
 
-    private String name;
-    private String imageName;
-    private boolean isActive;
+    @ManyToOne
+    private Product product;
+
+    @Transient
+    private Double totalPrice;
+    @Transient
+    private Double totalOrderPrice;
+
 }
