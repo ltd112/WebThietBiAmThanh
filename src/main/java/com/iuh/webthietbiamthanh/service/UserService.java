@@ -1,36 +1,29 @@
 package com.iuh.webthietbiamthanh.service;
 
-import com.iuh.webthietbiamthanh.dto.request.UserCreationRequest;
 import com.iuh.webthietbiamthanh.models.User;
-import com.iuh.webthietbiamthanh.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class UserService {
-    @Autowired
-    private UserRepository userRepository;
+public interface UserService {
+    public User saveUser(User user);
+    public User getUserByEmail(String email);
+    public List<User> getUsers(String role);
 
-    public User createUser(UserCreationRequest request){
-        User user = new User();
-        user.setUserName(request.getUserName());
-        user.setPassword(request.getPassword());
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setEmail(request.getEmail());
-        user.setDateOfBirth(request.getDateOfBirth());
+    public Boolean updateAccountStatus(Integer id, Boolean status);
 
-        return userRepository.save(user);
+    public void increaseFailedAttempt(User user);
 
-    }
-    public List<User> getAllUsers(){
-        return userRepository.findAll();
+    public void userAccountLock(User user);
 
-    }
-    public User findUserById(String userId){
-        return userRepository.findById(userId).orElseThrow(()->new RuntimeException("User not found !"));
-    }
+    public boolean unlockAccountTimeExpired(User user);
+
+    public void resetAttempt(int userId);
+
+    public void updateUserResetToken(String email, String resetToken);
+
+    public User getUserByToken(String token);
+
+    public User updateUser(User user);
 
 }
