@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Entity
 @Getter @Setter  @AllArgsConstructor  @NoArgsConstructor
-public class User {
+public class UserDtls {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
