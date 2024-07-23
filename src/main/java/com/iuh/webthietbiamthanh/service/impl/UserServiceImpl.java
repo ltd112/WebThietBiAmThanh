@@ -1,6 +1,6 @@
 package com.iuh.webthietbiamthanh.service.impl;
 
-import com.iuh.webthietbiamthanh.models.User;
+import com.iuh.webthietbiamthanh.models.UserDtls;
 import com.iuh.webthietbiamthanh.repository.UserRepository;
 import com.iuh.webthietbiamthanh.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,17 +12,17 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
     @Override
-    public User saveUser(User user) {
+    public UserDtls saveUser(UserDtls user) {
         return null;
     }
 
     @Override
-    public User getUserByEmail(String email) {
+    public UserDtls getUserByEmail(String email) {
         return null;
     }
 
     @Override
-    public List<User> getUsers(String role) {
+    public List<UserDtls> getUsers(String role) {
         return null;
     }
 
@@ -32,17 +32,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void increaseFailedAttempt(User user) {
+    public void increaseFailedAttempt(UserDtls user) {
 
     }
 
     @Override
-    public void userAccountLock(User user) {
+    public void userAccountLock(UserDtls user) {
 
     }
 
     @Override
-    public boolean unlockAccountTimeExpired(User user) {
+    public boolean unlockAccountTimeExpired(UserDtls user) {
         return false;
     }
 
@@ -57,12 +57,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByToken(String token) {
+    public UserDtls getUserByToken(String token) {
         return null;
     }
 
     @Override
-    public User updateUser(User user) {
+    public UserDtls updateUser(UserDtls user) {
         return null;
     }
 }
