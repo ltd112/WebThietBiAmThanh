@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{base::layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<section>
+    <div class="container card-sh" style="margin-top: 70px; margin-bottom: 80px"  >
+        <div class="col-md-12 ps-5">
+            <div class="row" style=" padding-bottom: 20px">
+                <div class="col-md-4">
+                    <img alt="product_image" src="/img/product_img/Sennheiser-AMBEO-Sub-SW02-01-500x500.png"
+                         width="330px" height="400px">
+                </div>
+                <div class="col-md-8">
+                    <p class="fs-3">Loa</p>
+                    <p><span class="fw-bold">Mô tả: </span> <br> Loa cuc cang</p>
+                    <p><span class="fw-bold">Chi tiết sản phẩm: </span> <br>Trạng thái:
+                        <span class="badge bg-success">Còn hàng</span> <br>
+                        <span class="badge bg-warning">Hết hàng</span> <br>
+                        Category: Loa <br>
+                        Bảo hành: 12 tháng, đổi mới trong 30 ngày <br>
+                    </p>
+                    <p class="fs-5 fw-bold">
+                        Giá: 2000000 <i class="fas fa-dong-sign"></i>
+                        &nbsp;<span class="fs-6 text-decoration-line-through text-secondary">5000000</span>
+                        <span class="fs-6 text-success"> giảm 60%</span>
+                    </p>
+                    <div class="row">
+                        <div class="col-md-4 text-danger text-center p-2">
+                            <i class="fas fa-money-bill-wave fa-2x"></i>
+                            <p>Thanh toán khi giao hàng</p>
+                        </div>
+                        <div class="col-md-4 text-danger text-center p-2">
+                            <i class="fas fa-undo-alt fa-2x"></i>
+                            <p>Hoàn trả</p>
+                        </div>
+                        <div class="col-md-4 text-danger text-center p-2">
+                            <i class="fas fa-truck-moving fa-2x"></i>
+                            <p>Miễn phí vẫn chuyển</p>
+                        </div>
+                    </div>
+                    <a href="login" class="btn btn-danger col-md-6"> Thêm vào giỏ hàng </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
