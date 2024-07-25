@@ -13,12 +13,13 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Override
     public UserDtls saveUser(UserDtls user) {
-        return null;
+        UserDtls saveUser = userRepository.save(user);
+        return saveUser;
     }
 
     @Override
     public UserDtls getUserByEmail(String email) {
-        return null;
+        return userRepository.findByEmail(email);
     }
 
     @Override
