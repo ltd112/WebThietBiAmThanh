@@ -1,7 +1,11 @@
 package com.iuh.webthietbiamthanh.controller;
 
 import com.iuh.webthietbiamthanh.models.Category;
+import com.iuh.webthietbiamthanh.models.Product;
+import com.iuh.webthietbiamthanh.models.UserDtls;
 import com.iuh.webthietbiamthanh.service.CategoryService;
+import com.iuh.webthietbiamthanh.service.ProductService;
+import com.iuh.webthietbiamthanh.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -25,6 +29,12 @@ public class AdminController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/")
     public String index(){
@@ -118,16 +128,85 @@ public class AdminController {
     }
 
 
+    @PostMapping("/saveProduct")
+    public String saveProduct(@ModelAttribute Product product, @RequestParam("file") MultipartFile image,
+                              HttpSession session) throws IOException {
+
+        String imageName = image.isEmpty() ? "default.jpg" : image.getOriginalFilename();
+
+        product.setImage(imageName);
+        product.setDiscount(0);
+        product.setDiscountPrice(product.getPrice());
+        Product saveProduct = productService.saveProduct(product);
+
+        if (!ObjectUtils.isEmpty(saveProduct)) {
+
+            File saveFile = new ClassPathResource("static/img").getFile();
+
+            Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "product_img" + File.separator
+                    + image.getOriginalFilename());
+
+            // System.out.println(path);
+            Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+            session.setAttribute("succMsg", "Product Saved Success");
+        } else {
+            session.setAttribute("errorMsg", "something wrong on server");
+        }
+
+        return "redirect:/admin/loadAddProduct";
+    }
+
+
 
     @GetMapping("/products")
-    public  String loadViewProduct(){
+    public  String loadViewProduct(Model model){
+        model.addAttribute("products", productService.getAllProducts());
         return "/admin/products";
     }
 
+    @GetMapping("/deleteProduct/{id}")
+    public String deleteProduct(@PathVariable int id, HttpSession session){
+        Boolean deleteProduct = productService.deleteProduct(id);
+        if (deleteProduct) {
+            session.setAttribute("succMsg", "Product delete success");
+        } else {
+            session.setAttribute("errorMsg", "Something wrong on server");
+        }
+        return "redirect:/admin/products";
+    }
+
+    @GetMapping("/editProduct/{id}")
+    public String editProduct(@PathVariable int id, Model model){
+        model.addAttribute("product", productService.getProductById(id));
+        model.addAttribute("categories", categoryService.getAllCategory());
+        return "admin/edit_product";
+    }
+
+    @PostMapping("/updateProduct")
+    public String updateProduct(@ModelAttribute Product product, @RequestParam("file") MultipartFile image,
+                                HttpSession session, Model m) {
+
+        if (product.getDiscount() < 0 || product.getDiscount() > 100) {
+            session.setAttribute("errorMsg", "invalid Discount");
+        } else {
+            Product updateProduct = productService.updateProduct(product, image);
+            if (!ObjectUtils.isEmpty(updateProduct)) {
+                session.setAttribute("succMsg", "Product update success");
+            } else {
+                session.setAttribute("errorMsg", "Something wrong on server");
+            }
+        }
+        return "redirect:/admin/editProduct/" + product.getId();
+    }
+
     @GetMapping("/users")
-    public String getAllUsers(){
+    public String getAllUsers(Model m) {
+        List<UserDtls> users = userService.getUsers("ROLE_USER");
+        m.addAttribute("users", users);
         return "/admin/users";
     }
+
 
     @GetMapping("/orders")
     public String getAllOrders(){

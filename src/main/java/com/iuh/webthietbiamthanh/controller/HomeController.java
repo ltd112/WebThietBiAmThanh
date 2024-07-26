@@ -1,9 +1,11 @@
 package com.iuh.webthietbiamthanh.controller;
 
 import com.iuh.webthietbiamthanh.models.Category;
+import com.iuh.webthietbiamthanh.models.Product;
 import com.iuh.webthietbiamthanh.models.UserDtls;
+import com.iuh.webthietbiamthanh.service.CategoryService;
+import com.iuh.webthietbiamthanh.service.ProductService;
 import com.iuh.webthietbiamthanh.service.UserService;
-import com.iuh.webthietbiamthanh.service.impl.CategoryServiceImpl;
 import com.iuh.webthietbiamthanh.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -29,7 +30,10 @@ public class HomeController {
     private UserServiceImpl userService;
 
     @Autowired
-    private CategoryServiceImpl categoryService;
+    private CategoryService categoryService;
+
+    @Autowired
+    private ProductService productService;
 
     @GetMapping("/")
     public String index() {
@@ -47,23 +51,21 @@ public class HomeController {
     }
 
     @GetMapping("/products")
-    public String product() {
+    public String products(Model m, @RequestParam(value = "category", defaultValue = "") String category) {
+        // System.out.println("category="+category);
+        List<Category> categories = categoryService.getAllActiveCategory();
+        List<Product> products = productService.getAllActiveProducts(category);
+        m.addAttribute("categories", categories);
+        m.addAttribute("products", products);
+        m.addAttribute("paramValue", category);
         return "product";
     }
 
-    @GetMapping("/view_product")
-    public String view_product() {
+    @GetMapping("/product/{id}")
+    public String product(@PathVariable int id, Model m) {
+        Product productById = productService.getProductById(id);
+        m.addAttribute("product", productById);
         return "view_product";
-    }
-    @ModelAttribute
-    public void getUserDetails(Principal principal, Model model){
-        if (principal != null) {
-            String email = principal.getName();
-            UserDtls user = userService.getUserByEmail(email);
-            model.addAttribute("user", user);
-        }
-        List<Category> allActiveCategory = categoryService.getAllActiveCategory();
-        model.addAttribute("categories", allActiveCategory);
     }
 
     //Register controller
@@ -91,5 +93,4 @@ public class HomeController {
         }
         return "redirect:/register";
     }
-
 }
