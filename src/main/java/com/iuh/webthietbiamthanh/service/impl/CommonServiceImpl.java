@@ -9,7 +9,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import jakarta.servlet.http.HttpSession;
 
 @Service
-public class CommnServiceImpl implements CommonService {
+public class CommonServiceImpl implements CommonService {
 
     @Override
     public void removeSessionMessage() {
