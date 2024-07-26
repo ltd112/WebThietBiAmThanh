@@ -4,7 +4,6 @@ import com.iuh.webthietbiamthanh.models.UserDtls;
 import com.iuh.webthietbiamthanh.repository.UserRepository;
 import com.iuh.webthietbiamthanh.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,15 +12,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Override
+
+    //private PasswordEncoder passwordEncoder;
+
     public UserDtls saveUser(UserDtls user) {
-        user.setRole("USER");
-        String encodePassword =  passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodePassword);
-        UserDtls saveUser = userRepository.save(user);
-        return saveUser;
+        return null;
     }
 
     @Override
