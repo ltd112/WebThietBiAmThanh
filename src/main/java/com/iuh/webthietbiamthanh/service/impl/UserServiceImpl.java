@@ -12,13 +12,13 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    PasswordEncoder passwordEncoder;
+
     @Override
     public UserDtls saveUser(UserDtls user) {
-        user.setRole("USER");
-        String encodePassword =  passwordEncoder.encode(user.getPassword());
+        user.setRole("ROLE_USER");
+        String encodePassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodePassword);
         UserDtls saveUser = userRepository.save(user);
         return saveUser;

@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class CustomUser implements UserDetails {
+
     private UserDtls user;
 
     public CustomUser(UserDtls user) {
@@ -18,7 +19,7 @@ public class CustomUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority =  new SimpleGrantedAuthority(user.getRole());
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());
         return Arrays.asList(authority);
     }
 
