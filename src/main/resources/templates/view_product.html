@@ -7,26 +7,48 @@
 </head>
 <body>
 <section>
-    <div class="container card-sh" style="margin-top: 70px; margin-bottom: 80px"  >
+    <div class="container card-sh" style="margin-top: 70px; margin-bottom: 100px"  >
         <div class="col-md-12 ps-5">
-            <div class="row" style=" padding-bottom: 20px">
-                <div class="col-md-4">
-                    <img alt="product_image" src="/img/product_img/Sennheiser-AMBEO-Sub-SW02-01-500x500.png"
-                         width="330px" height="400px">
+            <div class="row" >
+                <th:block th:if="${session.succMsg}">
+                    <p class="text-success alert alert-success text-center" role="alert">[[${session.succMsg}]]</p>
+                    <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+                </th:block>
+
+                <th:block th:if="${session.errorMsg}">
+                    <p class="text-danger text-center  alert alert-danger">[[${session.errorMsg}]]</p>
+                    <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+
+                </th:block>
+                <div class="col-md-6 text-end">
+                    <img alt="" th:src="@{'/img/product_img/'+${product.image}}" width="330px"
+                         height="400px">
                 </div>
-                <div class="col-md-8">
-                    <p class="fs-3">Loa</p>
-                    <p><span class="fw-bold">Mô tả: </span> <br> Loa cuc cang</p>
-                    <p><span class="fw-bold">Chi tiết sản phẩm: </span> <br>Trạng thái:
-                        <span class="badge bg-success">Còn hàng</span> <br>
-                        <span class="badge bg-warning">Hết hàng</span> <br>
-                        Category: Loa <br>
-                        Bảo hành: 12 tháng, đổi mới trong 30 ngày <br>
+                <div class="col-md-6">
+                    <p class="fs-3">[[${product.title}]]</p>
+                    <p>
+                        <span class="fw-bold">Description : </span><br>[[${product.description}]]
+                    </p>
+                    <p>
+                        <span class="fw-bold"> Product Details: </span> <br> Status
+                        :
+                        <th:block th:if="${product.stock>0}">
+                            <span class="badge bg-success">Còn hàng</span>
+                        </th:block>
+
+                        <th:block th:unless="${product.stock>0}">
+                            <span class="badge bg-warning">Hết hàng</span>
+                        </th:block>
+
+
+                        <br> Category: [[${product.category}]]<br> Policy : 7
+                        Days Replacement & Return
                     </p>
                     <p class="fs-5 fw-bold">
-                        Giá: 2000000 <i class="fas fa-dong-sign"></i>
-                        &nbsp;<span class="fs-6 text-decoration-line-through text-secondary">5000000</span>
-                        <span class="fs-6 text-success"> giảm 60%</span>
+                        Price :&nbsp; &nbsp; &nbsp; &nbsp;
+                        [[${product.discountPrice}]] VND<span
+                            class="fs-6 text-decoration-line-through text-secondary">[[${product.price}]]</span>
+                        <span class="fs-6  text-success">  [[${product.discount}]]% off</span>
                     </p>
                     <div class="row">
                         <div class="col-md-4 text-danger text-center p-2">
@@ -42,7 +64,25 @@
                             <p>Miễn phí vẫn chuyển</p>
                         </div>
                     </div>
-                    <a href="login" class="btn btn-danger col-md-6"> Thêm vào giỏ hàng </a>
+
+                    <th:block th:if="${product.stock>0}">
+                        <th:block th:if="${user==null}">
+                            <a href="/signin" class="btn btn-danger col-md-12">Add To
+                                Cart</a>
+                        </th:block>
+
+                        <th:block th:unless="${user==null}">
+                            <a
+                                    th:href="@{'/user/addCart?pid='+${product.id}+'&uid='+${user.id}}"
+                                    class="btn btn-danger col-md-12">Add To Cart</a>
+                        </th:block>
+
+                    </th:block>
+
+                    <th:block th:unless="${product.stock>0}">
+                        <a href="#" class="btn text-white btn-warning col-md-12">Out
+                            of Stock</a>
+                    </th:block>
                 </div>
             </div>
         </div>
