@@ -19,5 +19,5 @@ public class Category {
 
     private String name;
     private String imageName;
-    private boolean isActive;
+    private Boolean isActive;
 }

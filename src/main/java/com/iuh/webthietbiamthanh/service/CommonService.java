@@ -1,5 +1,5 @@
 package com.iuh.webthietbiamthanh.service;
 
-public interface CommnService {
+public interface CommonService {
     public void removeSessionMessage();
 }
