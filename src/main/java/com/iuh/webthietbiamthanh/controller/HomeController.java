@@ -1,12 +1,15 @@
 package com.iuh.webthietbiamthanh.controller;
 
+import com.iuh.webthietbiamthanh.models.Category;
 import com.iuh.webthietbiamthanh.models.UserDtls;
 import com.iuh.webthietbiamthanh.service.UserService;
+import com.iuh.webthietbiamthanh.service.impl.CategoryServiceImpl;
 import com.iuh.webthietbiamthanh.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,11 +20,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class HomeController {
     @Autowired
     private UserServiceImpl userService;
+
+    @Autowired
+    private CategoryServiceImpl categoryService;
 
     @GetMapping("/")
     public String index() {
@@ -46,6 +54,16 @@ public class HomeController {
     @GetMapping("/view_product")
     public String view_product() {
         return "view_product";
+    }
+    @ModelAttribute
+    public void getUserDetails(Principal principal, Model model){
+        if (principal != null) {
+            String email = principal.getName();
+            UserDtls user = userService.getUserByEmail(email);
+            model.addAttribute("user", user);
+        }
+        List<Category> allActiveCategory = categoryService.getAllActiveCategory();
+        model.addAttribute("categories", allActiveCategory);
     }
 
     //Register controller
@@ -73,4 +91,5 @@ public class HomeController {
         }
         return "redirect:/register";
     }
+
 }

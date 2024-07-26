@@ -46,6 +46,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> getAllActiveCategory() {
-        return null;
+        return categoryRepository.findAllByIsActive(true);
     }
 }
