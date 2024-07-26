@@ -32,17 +32,23 @@ public class SecurityConfig {
         return authProvider;
     }
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable()).cors(cors->cors.disable())
-                .authorizeHttpRequests(req->req.requestMatchers("/user/**").hasRole("USER")
+        http.csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/user/**").hasRole("USER")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/").permitAll())
-                .formLogin(form->form.loginPage("/signin")
+                        .requestMatchers("/", "/signin", "/login").permitAll()
+                        .anyRequest().permitAll())
+                .formLogin(form -> form
+                        .loginPage("/signin")
                         .loginProcessingUrl("/login")
-//                        .defaultSuccessUrl("/"))
-                        .successHandler(authenticationSuccessHandler))
-                .logout(logout->logout.permitAll());
+                        .successHandler(authenticationSuccessHandler)
+                        .permitAll())
+                .logout(logout -> logout.permitAll())
+                .exceptionHandling(ex -> ex.accessDeniedPage("/access-denied"));
         return http.build();
     }
 }
