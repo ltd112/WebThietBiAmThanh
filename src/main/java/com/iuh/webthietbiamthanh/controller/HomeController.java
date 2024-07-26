@@ -1,12 +1,17 @@
 package com.iuh.webthietbiamthanh.controller;
 
+import com.iuh.webthietbiamthanh.models.Category;
+import com.iuh.webthietbiamthanh.models.Product;
 import com.iuh.webthietbiamthanh.models.UserDtls;
+import com.iuh.webthietbiamthanh.service.CategoryService;
+import com.iuh.webthietbiamthanh.service.ProductService;
 import com.iuh.webthietbiamthanh.service.UserService;
 import com.iuh.webthietbiamthanh.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,11 +22,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 @Controller
 public class HomeController {
     @Autowired
     private UserServiceImpl userService;
+
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private ProductService productService;
 
     @GetMapping("/")
     public String index() {
@@ -39,12 +51,20 @@ public class HomeController {
     }
 
     @GetMapping("/products")
-    public String product() {
+    public String products(Model m, @RequestParam(value = "category", defaultValue = "") String category) {
+        // System.out.println("category="+category);
+        List<Category> categories = categoryService.getAllActiveCategory();
+        List<Product> products = productService.getAllActiveProducts(category);
+        m.addAttribute("categories", categories);
+        m.addAttribute("products", products);
+        m.addAttribute("paramValue", category);
         return "product";
     }
 
-    @GetMapping("/view_product")
-    public String view_product() {
+    @GetMapping("/product/{id}")
+    public String product(@PathVariable int id, Model m) {
+        Product productById = productService.getProductById(id);
+        m.addAttribute("product", productById);
         return "view_product";
     }
 
