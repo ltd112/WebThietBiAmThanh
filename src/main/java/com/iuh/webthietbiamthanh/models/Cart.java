@@ -22,6 +22,8 @@ public class Cart {
     @ManyToOne
     private Product product;
 
+    private Integer quantity;
+
     @Transient
     private Double totalPrice;
     @Transient
