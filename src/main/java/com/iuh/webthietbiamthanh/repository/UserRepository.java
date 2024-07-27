@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserDtls, String> {
+public interface UserRepository extends JpaRepository<UserDtls, Integer> {
     public UserDtls findByEmail(String email);
     public List<UserDtls> findByRole(String role);
     public UserDtls findByResetToken(String token);
