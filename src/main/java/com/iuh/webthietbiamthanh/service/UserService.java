@@ -1,6 +1,7 @@
 package com.iuh.webthietbiamthanh.service;
 
 import com.iuh.webthietbiamthanh.models.UserDtls;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,4 +26,9 @@ public interface UserService {
 
     public UserDtls updateUser(UserDtls user);
 
+    UserDtls saveAdmin(UserDtls user);
+
+    public Boolean existsEmail(String email);
+
+    UserDtls updateUserProfile(UserDtls user, MultipartFile img);
 }

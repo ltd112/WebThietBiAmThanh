@@ -3,6 +3,7 @@ package com.iuh.webthietbiamthanh.controller;
 import com.iuh.webthietbiamthanh.models.Category;
 import com.iuh.webthietbiamthanh.models.Product;
 import com.iuh.webthietbiamthanh.models.UserDtls;
+import com.iuh.webthietbiamthanh.service.CartService;
 import com.iuh.webthietbiamthanh.service.CategoryService;
 import com.iuh.webthietbiamthanh.service.ProductService;
 import com.iuh.webthietbiamthanh.service.UserService;
@@ -35,6 +36,9 @@ public class HomeController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private CartService cartService;
 
     @GetMapping("/")
     public String index() {
@@ -100,12 +104,12 @@ public class HomeController {
             String email = p.getName();
             UserDtls userDtls = userService.getUserByEmail(email);
             m.addAttribute("user", userDtls);
-        } else {
-            m.addAttribute("user", null);
+            Integer countCart = cartService.getCountCart(userDtls.getId());
+            m.addAttribute("countCart", countCart);
         }
 
         List<Category> allActiveCategory = categoryService.getAllActiveCategory();
-        m.addAttribute("categories", allActiveCategory);
+        m.addAttribute("categorys", allActiveCategory);
     }
 
 }
