@@ -5,11 +5,13 @@ import com.iuh.webthietbiamthanh.models.Product;
 import com.iuh.webthietbiamthanh.models.ProductOrder;
 import com.iuh.webthietbiamthanh.models.UserDtls;
 import com.iuh.webthietbiamthanh.service.*;
+import com.iuh.webthietbiamthanh.util.CommonUtil;
 import com.iuh.webthietbiamthanh.util.OrderStatus;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -43,6 +45,12 @@ public class AdminController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private CommonUtil commonUtil;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     @ModelAttribute
@@ -406,27 +414,27 @@ public class AdminController {
         return "redirect:/admin/profile";
     }
 
-//    @PostMapping("/change-password")
-//    public String changePassword(@RequestParam String newPassword, @RequestParam String currentPassword, Principal p,
-//                                 HttpSession session) {
-//        UserDtls loggedInUserDetails = commonUtil.getLoggedInUserDetails(p);
-//
-//        boolean matches = passwordEncoder.matches(currentPassword, loggedInUserDetails.getPassword());
-//
-//        if (matches) {
-//            String encodePassword = passwordEncoder.encode(newPassword);
-//            loggedInUserDetails.setPassword(encodePassword);
-//            UserDtls updateUser = userService.updateUser(loggedInUserDetails);
-//            if (ObjectUtils.isEmpty(updateUser)) {
-//                session.setAttribute("errorMsg", "Password not updated !! Error in server");
-//            } else {
-//                session.setAttribute("succMsg", "Password Updated sucessfully");
-//            }
-//        } else {
-//            session.setAttribute("errorMsg", "Current Password incorrect");
-//        }
-//
-//        return "redirect:/admin/profile";
-//    }
+    @PostMapping("/change-password")
+    public String changePassword(@RequestParam String newPassword, @RequestParam String currentPassword, Principal p,
+                                 HttpSession session) {
+        UserDtls loggedInUserDetails = commonUtil.getLoggedInUserDetails(p);
+
+        boolean matches = passwordEncoder.matches(currentPassword, loggedInUserDetails.getPassword());
+
+        if (matches) {
+            String encodePassword = passwordEncoder.encode(newPassword);
+            loggedInUserDetails.setPassword(encodePassword);
+            UserDtls updateUser = userService.updateUser(loggedInUserDetails);
+            if (ObjectUtils.isEmpty(updateUser)) {
+                session.setAttribute("errorMsg", "Password not updated !! Error in server");
+            } else {
+                session.setAttribute("succMsg", "Password Updated sucessfully");
+            }
+        } else {
+            session.setAttribute("errorMsg", "Current Password incorrect");
+        }
+
+        return "redirect:/admin/profile";
+    }
 
 }

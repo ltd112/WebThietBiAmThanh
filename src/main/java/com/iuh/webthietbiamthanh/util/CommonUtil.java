@@ -1,28 +1,28 @@
-//package com.iuh.webthietbiamthanh.util;
-//
-//
-//import com.iuh.webthietbiamthanh.models.ProductOrder;
-//import com.iuh.webthietbiamthanh.models.UserDtls;
-//import com.iuh.webthietbiamthanh.service.UserService;
+package com.iuh.webthietbiamthanh.util;
+
+
+import com.iuh.webthietbiamthanh.models.ProductOrder;
+import com.iuh.webthietbiamthanh.models.UserDtls;
+import com.iuh.webthietbiamthanh.service.UserService;
 //import jakarta.mail.MessagingException;
 //import jakarta.mail.internet.MimeMessage;
-//import jakarta.servlet.http.HttpServletRequest;
-//import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.mail.javamail.JavaMailSender;
 //import org.springframework.mail.javamail.MimeMessageHelper;
-//import org.springframework.stereotype.Component;
-//
-//import java.io.UnsupportedEncodingException;
-//import java.security.Principal;
-//
-//@Component
-//public class CommonUtil {
+import org.springframework.stereotype.Component;
+
+import java.io.UnsupportedEncodingException;
+import java.security.Principal;
+
+@Component
+public class CommonUtil {
 //    @Autowired
 //    private JavaMailSender mailSender;
-//
-//    @Autowired
-//    private UserService userService;
-//
+
+    @Autowired
+    private UserService userService;
+
 //    public Boolean sendMail(String url, String reciepentEmail) throws UnsupportedEncodingException, MessagingException {
 //
 //        MimeMessage message = mailSender.createMimeMessage();
@@ -39,17 +39,17 @@
 //        mailSender.send(message);
 //        return true;
 //    }
-//
-//    public static String generateUrl(HttpServletRequest request) {
-//
-//        // http://localhost:8080/forgot-password
-//        String siteUrl = request.getRequestURL().toString();
-//
-//        return siteUrl.replace(request.getServletPath(), "");
-//    }
-//
-//    String msg=null;;
-//
+
+    public static String generateUrl(HttpServletRequest request) {
+
+        // http://localhost:8080/forgot-password
+        String siteUrl = request.getRequestURL().toString();
+
+        return siteUrl.replace(request.getServletPath(), "");
+    }
+
+    String msg=null;;
+
 //    public Boolean sendMailForProductOrder(ProductOrder order, String status) throws Exception
 //    {
 //
@@ -81,10 +81,10 @@
 //        mailSender.send(message);
 //        return true;
 //    }
-//
-//    public UserDtls getLoggedInUserDetails(Principal p) {
-//        String email = p.getName();
-//        UserDtls userDtls = userService.getUserByEmail(email);
-//        return userDtls;
-//    }
-//}
+
+    public UserDtls getLoggedInUserDetails(Principal p) {
+        String email = p.getName();
+        UserDtls userDtls = userService.getUserByEmail(email);
+        return userDtls;
+    }
+}
