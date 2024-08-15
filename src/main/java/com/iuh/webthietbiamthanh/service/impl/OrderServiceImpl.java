@@ -4,14 +4,16 @@ import com.iuh.webthietbiamthanh.models.Cart;
 import com.iuh.webthietbiamthanh.models.OrderAddress;
 import com.iuh.webthietbiamthanh.models.OrderRequest;
 import com.iuh.webthietbiamthanh.models.ProductOrder;
+import com.iuh.webthietbiamthanh.repository.CartRepository;
 import com.iuh.webthietbiamthanh.repository.ProductOrderRepository;
-import com.iuh.webthietbiamthanh.service.CartService;
 import com.iuh.webthietbiamthanh.service.OrderService;
 import com.iuh.webthietbiamthanh.util.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -20,15 +22,21 @@ import java.util.UUID;
 @Service
 public class OrderServiceImpl implements OrderService {
     @Autowired
-    private ProductOrderRepository productOrderRepository;
-    @Autowired
-    private CartService cartRepository;
+    private ProductOrderRepository orderRepository;
 
+    @Autowired
+    private CartRepository cartRepository;
+
+//    @Autowired
+//    private CommonUtil commonUtil;
     @Override
-    public void saveOrder(Integer userId, OrderRequest orderRequest) {
-        List<Cart> carts = cartRepository.getCartsByUser(userId);
+    public void saveOrder(Integer userid, OrderRequest orderRequest) throws Exception {
+        List<Cart> carts = cartRepository.findByUserId(userid);
+
         for (Cart cart : carts) {
+
             ProductOrder order = new ProductOrder();
+
             order.setOrderId(UUID.randomUUID().toString());
             order.setOrderDate(LocalDate.now());
 
@@ -41,36 +49,56 @@ public class OrderServiceImpl implements OrderService {
             order.setStatus(OrderStatus.IN_PROGRESS.getName());
             order.setPaymentType(orderRequest.getPaymentType());
 
-            OrderAddress orderAddress = new OrderAddress();
-            orderAddress.setFirstName(orderRequest.getFirstName());
-            orderAddress.setLastName(orderRequest.getLastName());
-            orderAddress.setAddress(orderRequest.getAddress());
-            orderAddress.setCity(orderRequest.getCity());
-            orderAddress.setEmail(orderRequest.getEmail());
-            orderAddress.setMobileNo(orderRequest.getMobileNo());
-            orderAddress.setState(orderRequest.getState());
-            orderAddress.setPincode(orderRequest.getPinCode());
+            OrderAddress address = new OrderAddress();
+            address.setFirstName(orderRequest.getFirstName());
+            address.setLastName(orderRequest.getLastName());
+            address.setEmail(orderRequest.getEmail());
+            address.setMobileNo(orderRequest.getMobileNo());
+            address.setAddress(orderRequest.getAddress());
+            address.setCity(orderRequest.getCity());
+            address.setState(orderRequest.getState());
+            address.setPincode(orderRequest.getPincode());
 
-            order.setOrderAddress(orderAddress);
-            productOrderRepository.save(order);
+            order.setOrderAddress(address);
+
+            ProductOrder saveOrder = orderRepository.save(order);
+            //commonUtil.sendMailForProductOrder(saveOrder, "success");
         }
+
     }
 
     @Override
     public List<ProductOrder> getOrdersByUser(Integer userId) {
-        List<ProductOrder> orders = productOrderRepository.findByUserId(userId);
+
+        List<ProductOrder> orders = orderRepository.findByUserId(userId);
         return orders;
     }
 
     @Override
-    public boolean updateOrderStatus(Integer id, String status) {
-        Optional<ProductOrder> order = productOrderRepository.findById(id);
-        if (order.isPresent()) {
-            ProductOrder productOrder = order.get();
+    public ProductOrder updateOrderStatus(Integer id, String status) {
+        Optional<ProductOrder> findById = orderRepository.findById(id);
+        if (findById.isPresent()) {
+            ProductOrder productOrder = findById.get();
             productOrder.setStatus(status);
-            productOrderRepository.save(productOrder);
-            return true;
+            ProductOrder updateOrder = orderRepository.save(productOrder);
+            return updateOrder;
         }
-        return false;
+        return null;
+    }
+
+    @Override
+    public List<ProductOrder> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
+    @Override
+    public ProductOrder getOrdersByOrderId(String orderId) {
+        return orderRepository.findByOrderId(orderId);
+    }
+
+    @Override
+    public Page<ProductOrder> getAllOrdersPagination(Integer pageNo, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        return orderRepository.findAll(pageable);
     }
 }

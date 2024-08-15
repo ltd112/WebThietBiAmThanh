@@ -12,12 +12,12 @@
             <p class="text-center fs-3">My Orders</p>
             <th:block th:if="${session.succMsg}">
                 <p class="text-success fw-bold text-center">[[${session.succMsg}]]</p>
-                <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+                <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
             </th:block>
 
             <th:block th:if="${session.errorMsg}">
                 <p class="text-danger fw-bold text-center">[[${session.errorMsg}]]</p>
-                <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+                <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
             </th:block>
             <div class="col-md-12 ">
 
@@ -43,7 +43,7 @@
                         </td>
                         <td>[[${o.status}]]</td>
                         <td><th:block th:if="${o.status!='Cancelled'}">
-                            <a th:href="@{'/user/update-status?id='+${o.id}+'&status=6' }"
+                            <a th:href="@{'/user/update-status?id='+${o.id}+'&st=6' }"
                                class="btn btn-sm btn-danger">Cancel</a>
                         </th:block> <th:block th:unless="${o.status!='Cancelled'}">
                             <a href="#" class="btn btn-sm btn-danger disabled" >Cancel</a>

@@ -3,6 +3,7 @@ package com.iuh.webthietbiamthanh.controller;
 import com.iuh.webthietbiamthanh.models.Category;
 import com.iuh.webthietbiamthanh.models.Product;
 import com.iuh.webthietbiamthanh.models.UserDtls;
+import com.iuh.webthietbiamthanh.service.CartService;
 import com.iuh.webthietbiamthanh.service.CategoryService;
 import com.iuh.webthietbiamthanh.service.ProductService;
 import com.iuh.webthietbiamthanh.service.UserService;
@@ -36,8 +37,18 @@ public class HomeController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private CartService cartService;
+
     @GetMapping("/")
-    public String index() {
+    public String index( Model m) {
+        List<Category> allActiveCategory = categoryService.getAllActiveCategory().stream()
+                .sorted((c1, c2) -> c2.getId()).limit(6).toList();
+        List<Product> allActiveProducts = productService.getAllActiveProducts("").stream()
+                .sorted((p1, p2) -> p2.getId().compareTo(p1.getId())).limit(8).toList();
+        m.addAttribute("category", allActiveCategory);
+        m.addAttribute("products", allActiveProducts);
+
         return "index";
     }
 
@@ -100,12 +111,12 @@ public class HomeController {
             String email = p.getName();
             UserDtls userDtls = userService.getUserByEmail(email);
             m.addAttribute("user", userDtls);
-        } else {
-            m.addAttribute("user", null);
+            Integer countCart = cartService.getCountCart(userDtls.getId());
+            m.addAttribute("countCart", countCart);
         }
 
         List<Category> allActiveCategory = categoryService.getAllActiveCategory();
-        m.addAttribute("categories", allActiveCategory);
+        m.addAttribute("categorys", allActiveCategory);
     }
 
 }
