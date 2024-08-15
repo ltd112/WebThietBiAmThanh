@@ -1,11 +1,11 @@
 package com.iuh.webthietbiamthanh.controller;
 
-import com.iuh.webthietbiamthanh.models.Cart;
-import com.iuh.webthietbiamthanh.models.Category;
-import com.iuh.webthietbiamthanh.models.UserDtls;
+import com.iuh.webthietbiamthanh.models.*;
 import com.iuh.webthietbiamthanh.service.CartService;
 import com.iuh.webthietbiamthanh.service.CategoryService;
+import com.iuh.webthietbiamthanh.service.OrderService;
 import com.iuh.webthietbiamthanh.service.UserService;
+import com.iuh.webthietbiamthanh.util.OrderStatus;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +27,9 @@ public class UserController {
 
     @Autowired
     private CartService cartService;
+
+    @Autowired
+    private OrderService orderService;
 
     @GetMapping("/")
     public String home() {
@@ -77,6 +80,60 @@ public class UserController {
         String email = p.getName();
         UserDtls user = userService.getUserByEmail(email);
         return user;
+    }
+
+    @GetMapping("/orders")
+    public   String orderPage(Principal p, Model m){
+        UserDtls user = getLoggedInUserDetails(p);
+        List<Cart> carts = cartService.getCartsByUser(user.getId());
+        m.addAttribute("carts", carts);
+        if (carts.size() > 0){
+            Double orderPrice = carts.stream().mapToDouble(Cart::getTotalPrice).sum();
+            Double totalOrderPrice = orderPrice + 300000;
+            m.addAttribute("orderPrice", orderPrice);
+            m.addAttribute("totalOrderPrice", totalOrderPrice);
+        }
+        return "user/order";
+    }
+
+    @PostMapping("/save-order")
+    public String saveOrder(@ModelAttribute OrderRequest orderRequest, Principal p){
+        UserDtls user = getLoggedInUserDetails(p);
+        orderService.saveOrder(user.getId(), orderRequest);
+        return "redirect:/user/success";
+    }
+
+    @GetMapping("/success")
+    public String successPage(){
+        return "user/success";
+    }
+
+    @GetMapping("/user-orders")
+    public String userOrder(Principal p, Model m){
+        UserDtls user = getLoggedInUserDetails(p);
+        List<ProductOrder> orders = orderService.getOrdersByUser(user.getId());
+        m.addAttribute("orders", orders);
+        return "user/my_orders";
+    }
+
+    @GetMapping("/update-status")
+    public String updateOrderStatus(@RequestParam Integer id, @RequestParam String status, HttpSession session){
+        OrderStatus[] orderStatuses = OrderStatus.values();
+        String statusName = "";
+        for (OrderStatus orderStatus : orderStatuses){
+            if (orderStatus.getName().equals(status)){
+                statusName = orderStatus.getName();
+            }
+        }
+
+        boolean updated = orderService.updateOrderStatus(id, statusName);
+
+        if (updated){
+            session.setAttribute("succMsg", "Order status updated successfully");
+        } else {
+            session.setAttribute("errorMsg", "Order status update failed");
+        }
+        return "redirect:/user/user-orders";
     }
 
 }
