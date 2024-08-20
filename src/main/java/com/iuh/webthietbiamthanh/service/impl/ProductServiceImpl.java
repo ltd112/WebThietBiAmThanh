@@ -117,4 +117,9 @@ public class ProductServiceImpl implements ProductService {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         return productRepository.findAll(pageable);
     }
+
+    @Override
+    public List<Product> searchProduct(String ch) {
+        return productRepository.findByTitleContainingIgnoreCaseOrCategoryContainingIgnoreCase(ch, ch);
+    }
 }
