@@ -118,7 +118,6 @@ public class AdminController {
                 session.setAttribute("succMsg", "Saved successfully");
             }
         }
-
         return "redirect:/admin/category";
     }
 
@@ -162,7 +161,6 @@ public class AdminController {
         }
         else {
             session.setAttribute("errorMsg", "something wrong on server");
-
         }
 
     return "redirect:/admin/loadEditCategory/" + category.getId();
