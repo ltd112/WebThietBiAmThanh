@@ -160,6 +160,11 @@ public class HomeController {
 
         return "redirect:/forgot-password";
     }
-
+    @GetMapping("/search")
+    public String searchProduct(@RequestParam String ch, Model model){
+        List<Product> searchProduct = productService.searchProduct(ch);
+        model.addAttribute("products", searchProduct);
+        return "product";
+    }
 
 }
