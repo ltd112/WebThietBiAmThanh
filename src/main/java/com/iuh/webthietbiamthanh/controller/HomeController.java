@@ -8,6 +8,9 @@ import com.iuh.webthietbiamthanh.service.CategoryService;
 import com.iuh.webthietbiamthanh.service.ProductService;
 import com.iuh.webthietbiamthanh.service.UserService;
 import com.iuh.webthietbiamthanh.service.impl.UserServiceImpl;
+import com.iuh.webthietbiamthanh.util.CommonUtil;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -19,12 +22,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 public class HomeController {
@@ -39,6 +44,9 @@ public class HomeController {
 
     @Autowired
     private CartService cartService;
+
+    @Autowired
+    private CommonUtil commonUtil;
 
     @GetMapping("/")
     public String index( Model m) {
@@ -118,5 +126,40 @@ public class HomeController {
         List<Category> allActiveCategory = categoryService.getAllActiveCategory();
         m.addAttribute("categorys", allActiveCategory);
     }
+    @GetMapping("/forgot-password")
+    private String showForgotPasswordForm() {
+        return "forgot_password";
+    }
+
+    @PostMapping("/forgot-password")
+    public String processForgotPassword(@RequestParam String email, HttpSession session, HttpServletRequest request)
+            throws UnsupportedEncodingException, MessagingException {
+
+        UserDtls userByEmail = userService.getUserByEmail(email);
+
+        if (ObjectUtils.isEmpty(userByEmail)) {
+            session.setAttribute("errorMsg", "Invalid email");
+        } else {
+
+            String resetToken = UUID.randomUUID().toString();
+            userService.updateUserResetToken(email, resetToken);
+
+            // Generate URL :
+            // http://localhost:8080/reset-password?token=sfgdbgfswegfbdgfewgvsrg
+
+            String url = CommonUtil.generateUrl(request) + "/reset-password?token=" + resetToken;
+
+            Boolean sendMail = commonUtil.sendMail(url, email);
+
+            if (sendMail) {
+                session.setAttribute("succMsg", "Please check your email..Password Reset link sent");
+            } else {
+                session.setAttribute("errorMsg", "Somethong wrong on server ! Email not send");
+            }
+        }
+
+        return "redirect:/forgot-password";
+    }
+
 
 }

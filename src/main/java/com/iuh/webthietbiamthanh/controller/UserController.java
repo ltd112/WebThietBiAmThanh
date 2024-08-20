@@ -91,6 +91,7 @@ public class UserController {
     @GetMapping("/orders")
     public String orderPage(Principal p, Model m) {
         UserDtls user = getLoggedInUserDetails(p);
+        m.addAttribute("user", user);
         List<Cart> carts = cartService.getCartsByUser(user.getId());
         m.addAttribute("carts", carts);
         if (!carts.isEmpty()) {
